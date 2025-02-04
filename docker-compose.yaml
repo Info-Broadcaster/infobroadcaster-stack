@@ -2,41 +2,57 @@ name: infobroadcaster
 services:
   frontend:
     image: ghcr.io/info-broadcaster/frontend:97d464be9de0ef6b0e977575797a4d861432bba6
-    environment:
-      - VITE_BACKEND_URL=http://localhost:3000
+    container_name: infobroadcaster-frontend
+    env_file:
+      - infobroadcaster.env
     ports:
       - "5173:5173"
     networks:
       - infobroadcaster
     healthcheck:
-      test: ["CMD", "wget", "--spider", "http://localhost:5173"]
+      test: [ "CMD", "wget", "--spider", "http://localhost:5173" ]
       interval: 1m30s
       timeout: 30s
       retries: 5
       start_period: 30s
     depends_on:
-      - backend
-    
+      backend:
+        condition: service_healthy
+
   backend:
     image: ghcr.io/info-broadcaster/backend:aae4a4de86e3353e6afbb7da8fd213a4d0630a28
+    container_name: infobroadcaster-backend
     ports:
       - "3000:3000"
-    environment:
-      - FRONTEND_URL=http://localhost:5173
-      - MODEL_URL=<YOUR_MODEL_URL>
-      - APP_ID=<RAINBOW_APP_ID>
-      - APP_SECRET=<RAINBOW_APP_SECRET>
-      - PORT=3000
-      - LINKLY_API_KEY=<LINKLY_API_KEY>
-      - WORKSPACE_ID=<RAINBOW_WORKSPACE_ID>
+    env_file:
+      - infobroadcaster.env
     networks:
       - infobroadcaster
     healthcheck:
-      test: ["CMD", "wget", "--spider", "http://localhost:3000"]
+      test: [ "CMD", "wget", "--spider", "http://localhost:3000/api/hello" ]
       interval: 1m30s
       timeout: 30s
       retries: 5
       start_period: 30s
-      
+
+  # Si vous souhaitez utiliser le service AI-model, décommentez les lignes suivantes. 
+  # Il est fortement recommandé de se doter d'une carte graphique NVIDIA pour utiliser ce service.
+  # Plus d'informations sur https://ollama.com/blog/ollama-is-now-available-as-an-official-docker-image.
+  # ai-service:
+  #   image: ollama/ollama
+  #   container_name: infobroadcaster-ai-service
+  #   ports:
+  #     - "11434:11434"
+  #   volumes:
+  #     - ollama:/root/.ollama
+  #   runtime: nvidia
+  #   restart: always
+  #   networks:
+  #     - infobroadcaster
+
 networks:
   infobroadcaster:
+    name: infobroadcaster
+
+volumes:
+  ollama:
