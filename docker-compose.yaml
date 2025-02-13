@@ -20,7 +20,7 @@ services:
         condition: service_healthy
 
   backend:
-    image: ghcr.io/info-broadcaster/backend:aae4a4de86e3353e6afbb7da8fd213a4d0630a28
+    image: ghcr.io/info-broadcaster/backend:f6a364461bbcdfaaac78a3e93abc49c2039f7f33
     container_name: infobroadcaster-backend
     ports:
       - "3000:3000"
