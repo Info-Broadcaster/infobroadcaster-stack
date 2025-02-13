@@ -22,4 +22,7 @@ InfoBroadcaster sera donc accessible via l'URL suivante: [http://localhost:5173]
 
 ## Demo
 
-Une petite démo de la stack InfoBroadcaster + Docker
+Une petite démo de la stack InfoBroadcaster + Docker:
+
+https://github.com/user-attachments/assets/2c06c44c-008a-468c-85a0-3df653b7c0ac
+
